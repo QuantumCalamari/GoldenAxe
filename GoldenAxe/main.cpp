@@ -2,7 +2,7 @@
 
 int windowWidth = 1920;
 int windowHeight = 1080;
-float moveSpeed = 0.25f;
+float moveSpeed = 0.1f;
 
 int main()
 {
