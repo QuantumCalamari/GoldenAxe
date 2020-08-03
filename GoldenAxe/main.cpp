@@ -15,8 +15,9 @@ int main()
 
 	sf::Texture playerTexture;
 	playerTexture.loadFromFile("sprites/archer/spr_ArcherRun_strip_NoBkg.png");
-
-	sf::IntRect rectSourceSprite(1024 / 8, 0, 1024 / 8, 128);
+	int playerSpriteFrameN = 8; // number of frames in sprite
+	
+	sf::IntRect rectSourceSprite(playerTexture.getSize().x / playerSpriteFrameN, 0, playerTexture.getSize().x / playerSpriteFrameN, playerTexture.getSize().y);
 	sf::Sprite playerSprite(playerTexture, rectSourceSprite);
 	sf::Clock clock;
 
@@ -49,10 +50,10 @@ int main()
 		}
 
 		if (clock.getElapsedTime().asSeconds() > 0.2f) {
-			if (rectSourceSprite.left == (1024/8)*2)
+			if (rectSourceSprite.left == (playerTexture.getSize().x / playerSpriteFrameN)*2)
 				rectSourceSprite.left = 0;
 			else
-				rectSourceSprite.left += 1024 / 8;
+				rectSourceSprite.left += playerTexture.getSize().x / playerSpriteFrameN;
 
 			playerSprite.setTextureRect(rectSourceSprite);
 			clock.restart();
