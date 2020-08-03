@@ -1,16 +1,28 @@
 #include <SFML/Graphics.hpp>
 
+int windowWidth = 1920;
+int windowHeight = 1080;
+float moveSpeed = 0.25f;
+
 int main()
 {
-	sf::RenderWindow window(sf::VideoMode(400, 400), "SFML works!");
+	sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Golden Axe");
 
+	sf::Vector2f playerStart_pos = sf::Vector2f(windowWidth / 2, windowHeight / 2);
+	sf::Vector2f enemyStart_pos = sf::Vector2f(windowWidth / 1.5, windowHeight / 1.5);
 
-	sf::Vector2f start_pos = sf::Vector2f(100.0f, 100.0f);
+	sf::CircleShape enemy(40.f, 100.f);
 
-	sf::CircleShape shape(100.f);
-	shape.setFillColor(sf::Color::Green);
+	sf::Texture playerTexture;
+	playerTexture.loadFromFile("sprites/archer/spr_ArcherRun_strip_NoBkg.png");
+
+	sf::IntRect rectSourceSprite(1024 / 8, 0, 1024 / 8, 128);
+	sf::Sprite playerSprite(playerTexture, rectSourceSprite);
+	sf::Clock clock;
+
+	enemy.setFillColor(sf::Color::Red);
+	enemy.setOrigin(enemy.getRadius(), enemy.getRadius());
 	
-
 	while (window.isOpen())
 	{
 		sf::Event event;
@@ -20,26 +32,38 @@ int main()
 				window.close();
 		}
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-			start_pos.y -= 0.5f;
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+			playerStart_pos.y += moveSpeed;
 		}
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-			start_pos.y += 0.5f;
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+			playerStart_pos.y -= moveSpeed;
 		}
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-			start_pos.x -= 0.5f;
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+			playerStart_pos.x -= moveSpeed;
 		}
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-			start_pos.x += 0.5f;
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+			playerStart_pos.x += moveSpeed;
 		}
 
-		shape.setPosition(start_pos.x, start_pos.y);
+		if (clock.getElapsedTime().asSeconds() > 0.2f) {
+			if (rectSourceSprite.left == (1024/8)*2)
+				rectSourceSprite.left = 0;
+			else
+				rectSourceSprite.left += 1024 / 8;
+
+			playerSprite.setTextureRect(rectSourceSprite);
+			clock.restart();
+		}
+
+		playerSprite.setPosition(playerStart_pos.x, playerStart_pos.y);
+		enemy.setPosition(enemyStart_pos.x, enemyStart_pos.y);
 
 		window.clear();
-		window.draw(shape);
+		window.draw(playerSprite);
+		window.draw(enemy);
 		window.display();
 	}
 

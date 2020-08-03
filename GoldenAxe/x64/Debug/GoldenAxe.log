@@ -1,2 +1,23 @@
 ﻿  main.cpp
-  GoldenAxe.vcxproj -> C:\Users\jc15\source\repos\GoldenAxe\x64\Debug\GoldenAxe.exe
+C:\Users\Dan\source\repos\GoldenAxe\GoldenAxe\main.cpp(11,76): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\Dan\source\repos\GoldenAxe\GoldenAxe\main.cpp(11,58): warning C4244: 'argument': conversion from 'int' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\Dan\source\repos\GoldenAxe\GoldenAxe\main.cpp(12,77): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\Dan\source\repos\GoldenAxe\GoldenAxe\main.cpp(12,57): warning C4244: 'argument': conversion from 'double' to 'T', possible loss of data
+          with
+          [
+              T=float
+          ]
+C:\Users\Dan\source\repos\GoldenAxe\GoldenAxe\main.cpp(14,30): warning C4244: 'argument': conversion from 'float' to 'size_t', possible loss of data
+  GoldenAxe.vcxproj -> C:\Users\Dan\Source\Repos\GoldenAxe\x64\Debug\GoldenAxe.exe
