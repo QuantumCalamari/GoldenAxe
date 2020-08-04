@@ -3,19 +3,24 @@
 int windowWidth = 960;
 int windowHeight = 540;
 float gravity = 0.5f;
-float ground = windowHeight - 200.f;
 
-sf::Vector2f playerStart_pos = sf::Vector2f(windowWidth / 2, ground);
-sf::Vector2f enemyStart_pos = sf::Vector2f(windowWidth / 1.5, ground);
+// Ground
+sf::RectangleShape ground(sf::Vector2f(windowWidth, 32));
+
+// Test enemy
+sf::RectangleShape enemy(sf::Vector2f(20, 50));
+
+sf::Vector2f playerStart_pos = sf::Vector2f(windowWidth / 2, windowHeight - ground.getSize().y - 76);
+sf::Vector2f enemyStart_pos = sf::Vector2f(windowWidth / 1.5, windowHeight - ground.getSize().y);
 sf::Vector2f playerVelocity = sf::Vector2f(0, 0); // initial velocity
 sf::Vector2f playerAcceleration = sf::Vector2f(0, 0); // initial acceleration
 
 void movePlayer() {
-	if (playerStart_pos.y > ground) {
+	if (playerStart_pos.y > windowHeight - ground.getSize().y) {
 		playerVelocity.y += gravity;
 	}
-	else if (playerStart_pos.y < ground) {
-		playerStart_pos.y = ground;
+	else if (playerStart_pos.y < windowHeight - ground.getSize().y) {
+		playerStart_pos.y = windowHeight - ground.getSize().y - 76;
 	}
 
 	playerVelocity.x += playerAcceleration.x;
@@ -29,18 +34,26 @@ int main()
 {
 	sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Golden Axe");
 
-	sf::CircleShape enemy(20.f, 50.f);
-
+	ground.setFillColor(sf::Color::Green);
+	enemy.setFillColor(sf::Color::Red);
+	enemy.setOrigin(enemy.getSize().x, enemy.getSize().y);
+	
+	// Player Texture
 	sf::Texture playerTexture;
 	playerTexture.loadFromFile("sprites/archer/spr_ArcherRun_strip_NoBkg.png");
 	int playerSpriteFrameN = 8; // number of frames in sprite
+	sf::IntRect rectPlayerSprite(playerTexture.getSize().x / playerSpriteFrameN, 0, playerTexture.getSize().x / playerSpriteFrameN, playerTexture.getSize().y);
+	sf::Sprite playerSprite(playerTexture, rectPlayerSprite);
 	
-	sf::IntRect rectSourceSprite(playerTexture.getSize().x / playerSpriteFrameN, 0, playerTexture.getSize().x / playerSpriteFrameN, playerTexture.getSize().y);
-	sf::Sprite playerSprite(playerTexture, rectSourceSprite);
+	// Ground Texture
+	sf::Texture groundTexture;
+	groundTexture.loadFromFile("sprites/Ground_crop.png");
+	sf::IntRect rectGroundSprite(groundTexture.getSize().x, 0, windowWidth, groundTexture.getSize().y);
+	groundTexture.setRepeated(true);
+	sf::Sprite groundSprite(groundTexture, rectGroundSprite);
+	
 	sf::Clock clock;
 
-	enemy.setFillColor(sf::Color::Red);
-	enemy.setOrigin(enemy.getRadius(), enemy.getRadius());
 	
 	while (window.isOpen())
 	{
@@ -65,7 +78,7 @@ int main()
 			playerVelocity.x = 0;
 		}
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::Space) || sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
 			playerVelocity.y = -50;
 		}
 		else {
@@ -73,20 +86,23 @@ int main()
 		}
 
 		if (clock.getElapsedTime().asSeconds() > 0.2f) {
-			if (rectSourceSprite.left == (playerTexture.getSize().x / playerSpriteFrameN)*2)
-				rectSourceSprite.left = 0;
+			if (rectPlayerSprite.left == (playerTexture.getSize().x / playerSpriteFrameN)*2)
+				rectPlayerSprite.left = 0;
 			else
-				rectSourceSprite.left += playerTexture.getSize().x / playerSpriteFrameN;
+				rectPlayerSprite.left += playerTexture.getSize().x / playerSpriteFrameN;
 
-			playerSprite.setTextureRect(rectSourceSprite);
+			playerSprite.setTextureRect(rectPlayerSprite);
 			clock.restart();
 		}
 
 		movePlayer();
-		playerSprite.setPosition(playerStart_pos.x, playerStart_pos.y);
-		enemy.setPosition(enemyStart_pos.x, enemyStart_pos.y);
+		ground.setPosition(0, windowHeight - ground.getSize().y);
+		groundSprite.setPosition(0, windowHeight - groundTexture.getSize().y);
+		playerSprite.setPosition(playerStart_pos);
+		enemy.setPosition(enemyStart_pos);
 
 		window.clear();
+		window.draw(groundSprite);
 		window.draw(playerSprite);
 		window.draw(enemy);
 		window.display();
