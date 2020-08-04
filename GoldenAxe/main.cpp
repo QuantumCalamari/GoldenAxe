@@ -33,6 +33,8 @@ void movePlayer() {
 int main()
 {
 	sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Golden Axe");
+	sf::Clock clock;
+	window.setFramerateLimit(120);
 
 	ground.setFillColor(sf::Color::Green);
 	enemy.setFillColor(sf::Color::Red);
@@ -52,11 +54,12 @@ int main()
 	groundTexture.setRepeated(true);
 	sf::Sprite groundSprite(groundTexture, rectGroundSprite);
 	
-	sf::Clock clock;
+
 
 	
 	while (window.isOpen())
 	{
+
 		sf::Event event;
 		while (window.pollEvent(event))
 		{
@@ -65,14 +68,14 @@ int main()
 		}
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-			playerVelocity.x = -1;
+			playerVelocity.x = -2;
 		}
 		else {
 			playerVelocity.x = 0;
 		}
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-			playerVelocity.x = 1;
+			playerVelocity.x = 2;
 		}
 		else {
 			playerVelocity.x = 0;
