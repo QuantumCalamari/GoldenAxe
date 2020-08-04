@@ -1,17 +1,35 @@
 #include <SFML/Graphics.hpp>
 
-int windowWidth = 1920;
-int windowHeight = 1080;
-float moveSpeed = 0.1f;
+int windowWidth = 960;
+int windowHeight = 540;
+float gravity = 0.5f;
+float ground = windowHeight - 200.f;
+
+sf::Vector2f playerStart_pos = sf::Vector2f(windowWidth / 2, ground);
+sf::Vector2f enemyStart_pos = sf::Vector2f(windowWidth / 1.5, ground);
+sf::Vector2f playerVelocity = sf::Vector2f(0, 0); // initial velocity
+sf::Vector2f playerAcceleration = sf::Vector2f(0, 0); // initial acceleration
+
+void movePlayer() {
+	if (playerStart_pos.y > ground) {
+		playerVelocity.y += gravity;
+	}
+	else if (playerStart_pos.y < ground) {
+		playerStart_pos.y = ground;
+	}
+
+	playerVelocity.x += playerAcceleration.x;
+	playerVelocity.y += playerAcceleration.y;
+
+	playerStart_pos.x += playerVelocity.x;
+	playerStart_pos.y += playerVelocity.y;
+}
 
 int main()
 {
 	sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Golden Axe");
 
-	sf::Vector2f playerStart_pos = sf::Vector2f(windowWidth / 2, windowHeight / 2);
-	sf::Vector2f enemyStart_pos = sf::Vector2f(windowWidth / 1.5, windowHeight / 1.5);
-
-	sf::CircleShape enemy(40.f, 100.f);
+	sf::CircleShape enemy(20.f, 50.f);
 
 	sf::Texture playerTexture;
 	playerTexture.loadFromFile("sprites/archer/spr_ArcherRun_strip_NoBkg.png");
@@ -33,20 +51,25 @@ int main()
 				window.close();
 		}
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-			playerStart_pos.y += moveSpeed;
-		}
-
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-			playerStart_pos.y -= moveSpeed;
-		}
-
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-			playerStart_pos.x -= moveSpeed;
+			playerVelocity.x = -1;
+		}
+		else {
+			playerVelocity.x = 0;
 		}
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-			playerStart_pos.x += moveSpeed;
+			playerVelocity.x = 1;
+		}
+		else {
+			playerVelocity.x = 0;
+		}
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+			playerVelocity.y = -50;
+		}
+		else {
+			playerVelocity.y = 0;
 		}
 
 		if (clock.getElapsedTime().asSeconds() > 0.2f) {
@@ -59,6 +82,7 @@ int main()
 			clock.restart();
 		}
 
+		movePlayer();
 		playerSprite.setPosition(playerStart_pos.x, playerStart_pos.y);
 		enemy.setPosition(enemyStart_pos.x, enemyStart_pos.y);
 
