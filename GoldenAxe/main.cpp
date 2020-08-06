@@ -5,12 +5,12 @@ int windowHeight = 540;
 float gravity = 0.5f;
 
 // Ground
-sf::RectangleShape ground(sf::Vector2f(windowWidth, 32));
+sf::RectangleShape ground(sf::Vector2f(windowWidth, 32)); // would be better if this didn't exist, currently used to offset player start pos as can't get sprite load to work outside main loop
 
 // Test enemy
 sf::RectangleShape enemy(sf::Vector2f(20, 50));
 
-sf::Vector2f playerStart_pos = sf::Vector2f(windowWidth / 2, windowHeight - ground.getSize().y - 76);
+sf::Vector2f playerStart_pos = sf::Vector2f(windowWidth / 2, windowHeight - ground.getSize().y - 76); // 76 should be found from player sprite height
 sf::Vector2f enemyStart_pos = sf::Vector2f(windowWidth / 1.5, windowHeight - ground.getSize().y);
 sf::Vector2f playerVelocity = sf::Vector2f(0, 0); // initial velocity
 sf::Vector2f playerAcceleration = sf::Vector2f(0, 0); // initial acceleration
@@ -20,7 +20,7 @@ void movePlayer() {
 		playerVelocity.y += gravity;
 	}
 	else if (playerStart_pos.y < windowHeight - ground.getSize().y) {
-		playerStart_pos.y = windowHeight - ground.getSize().y - 76;
+		playerStart_pos.y = windowHeight - ground.getSize().y - 76; // 76 should be found from player sprite height
 	}
 
 	playerVelocity.x += playerAcceleration.x;
@@ -55,8 +55,6 @@ int main()
 	sf::Sprite groundSprite(groundTexture, rectGroundSprite);
 	
 
-
-	
 	while (window.isOpen())
 	{
 
